@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HIMALAYAN eSports — Rise to Glory</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        neon: '#00e5ff',
+        electric: '#2563ff',
+        glow: '#7afcff',
+        darkbg: '#060915',
+        panel: '#0c1226',
+      },
+      fontFamily: {
+        display: ['Orbitron', 'sans-serif'],
+        body: ['Rajdhani', 'sans-serif'],
+      }
+    }
+  }
+}
+</script>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  body { background: #060915; font-family: 'Rajdhani', sans-serif; color: #e6f0ff; overflow-x:hidden; }
+  h1,h2,h3,.font-display { font-family:'Orbitron', sans-serif; }
+  .neon-text { text-shadow: 0 0 10px rgba(0,229,255,.8), 0 0 30px rgba(0,229,255,.5); }
+  .glass { background: rgba(12,18,38,.65); backdrop-filter: blur(14px); border:1px solid rgba(0,229,255,.18); }
+  .glow-border { box-shadow: 0 0 0 1px rgba(0,229,255,.3), 0 0 25px rgba(0,229,255,.25); }
+  .btn-neon { background:linear-gradient(90deg,#00e5ff,#2563ff); color:#04101f; transition:.3s; }
+  .btn-neon:hover { box-shadow:0 0 25px rgba(0,229,255,.8); transform:translateY(-2px); }
+  .grid-bg { background-image:linear-gradient(rgba(0,229,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,.05) 1px,transparent 1px); background-size:40px 40px; }
+  @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
+  .float { animation:float 5s ease-in-out infinite; }
+  @keyframes pulseGlow { 0%,100%{opacity:.5} 50%{opacity:1} }
+  .pulse-dot { animation:pulseGlow 1.6s infinite; }
+  .view { display:none; }
+  .view.active { display:block; animation:fade .4s ease; }
+  @keyframes fade { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+  ::-webkit-scrollbar{width:9px}::-webkit-scrollbar-track{background:#060915}::-webkit-scrollbar-thumb{background:#1c3366;border-radius:9px}
+  .mountain { position:absolute; bottom:0; left:0; width:100%; z-index:0; pointer-events:none; }
+  .card-hover{ transition:.35s; }
+  .card-hover:hover{ transform:translateY(-6px); box-shadow:0 0 30px rgba(0,229,255,.35); border-color:rgba(0,229,255,.6); }
+  .tab-active{ background:linear-gradient(90deg,#00e5ff,#2563ff); color:#04101f; }
+</style>
+</head>
+<body class="min-h-screen">
+
+<!-- NAVBAR -->
+<nav class="fixed top-0 inset-x-0 z-50 glass">
+  <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+    <div class="flex items-center gap-2 cursor-pointer" onclick="showView('home')">
+      <div class="w-10 h-10 rounded-lg btn-neon flex items-center justify-center font-display font-black text-lg">H</div>
+      <div>
+        <div class="font-display font-bold text-sm md:text-base tracking-wider">HIMALAYAN <span class="text-neon">eSports</span></div>
+        <div class="text-[10px] text-glow/70 tracking-widest hidden sm:block">RISE TO GLORY</div>
+      </div>
+    </div>
+    <div class="hidden md:flex items-center gap-6 text-sm font-semibold tracking-wide">
+      <a onclick="showView('home')" class="cursor-pointer hover:text-neon transition">Home</a>
+      <a onclick="showView('home');setTimeout(()=>document.getElementById('tournaments').scrollIntoView({behavior:'smooth'}),100)" class="cursor-pointer hover:text-neon transition">Tournaments</a>
+      <a onclick="showView('register')" class="cursor-pointer hover:text-neon transition">Register</a>
+      <a onclick="showView('dashboard')" class="cursor-pointer hover:text-neon transition">My Matches</a>
+      <a onclick="showView('admin')" class="cursor-pointer hover:text-neon transition text-electric">Admin</a>
+      <button onclick="showView('register')" class="btn-neon px-5 py-2 rounded-lg font-bold">Register Now</button>
+    </div>
+    <button onclick="toggleMenu()" class="md:hidden text-neon text-2xl">☰</button>
+  </div>
+  <div id="mobileMenu" class="md:hidden hidden flex-col gap-1 px-4 pb-4 text-sm font-semibold">
+    <a onclick="showView('home');toggleMenu()" class="cursor-pointer py-2 border-b border-white/5">Home</a>
+    <a onclick="showView('register');toggleMenu()" class="cursor-pointer py-2 border-b border-white/5">Register</a>
+    <a onclick="showView('dashboard');toggleMenu()" class="cursor-pointer py-2 border-b border-white/5">My Matches</a>
+    <a onclick="showView('admin');toggleMenu()" class="cursor-pointer py-2 text-electric">Admin Panel</a>
+  </div>
+</nav>
+
+<!-- ========== HOME VIEW ========== -->
+<div id="home" class="view active">
+  <!-- HERO -->
+  <section class="relative min-h-screen grid-bg flex items-center overflow-hidden pt-20">
+    <div class="absolute inset-0 bg-gradient-to-b from-electric/10 via-darkbg to-darkbg"></div>
+    <!-- mountains -->
+    <svg class="mountain opacity-60" viewBox="0 0 1440 320" preserveAspectRatio="none" style="height:45vh">
+      <polygon points="0,320 180,120 360,220 520,80 720,260 920,100 1120,230 1300,120 1440,260 1440,320" fill="#0a1226"/>
+      <polygon points="0,320 180,120 360,220 520,80 720,260 920,100 1120,230 1300,120 1440,260 1440,320" fill="none" stroke="#00e5ff" stroke-width="1" opacity=".25"/>
+      <polygon points="500,80 540,140 480,140" fill="#fff" opacity=".6"/>
+      <polygon points="900,100 945,170 855,170" fill="#fff" opacity=".6"/>
+    </svg>
+    <div class="relative z-10 max-w-7xl mx-auto px-6 w-full">
+      <div class="max-w-2xl">
+        <div class="inline-flex items-center gap-2 glass px-4 py-1.5 rounded-full mb-5">
+          <span class="w-2 h-2 rounded-full bg-neon pulse-dot"></span>
+          <span class="text-xs tracking-widest text-glow">LIVE TOURNAMENTS • PAN-INDIA</span>
+        </div>
+        <h1 class="font-display font-black text-4xl sm:text-6xl leading-tight mb-4">
+          HIMALAYAN <span class="text-neon neon-text">eSports</span><br>
+          <span class="text-2xl sm:text-4xl text-glow">RISE TO GLORY</span>
+        </h1>
+        <p class="text-lg text-gray-300 mb-8 max-w-lg">
+          West Bengal's leading esports organizer, now going Pan-India. Compete in BGMI, Free Fire & EA Sports FC Mobile for real prize pools & instant payouts.
+        </p>
+        <div class="flex flex-wrap gap-4">
+          <button onclick="showView('register')" class="btn-neon px-8 py-3.5 rounded-xl font-bold text-lg">⚡ Register Now</button>
+          <button onclick="document.getElementById('tournaments').scrollIntoView({behavior:'smooth'})" class="glass glow-border px-8 py-3.5 rounded-xl font-bold text-lg hover:text-neon transition">View Tournaments</button>
+        </div>
+        <div class="flex gap-8 mt-10">
+          <div><div class="font-display font-black text-2xl text-neon">₹5L+</div><div class="text-xs text-gray-400 tracking-wider">PRIZES PAID</div></div>
+          <div><div class="font-display font-black text-2xl text-neon">12K+</div><div class="text-xs text-gray-400 tracking-wider">PLAYERS</div></div>
+          <div><div class="font-display font-black text-2xl text-neon">300+</div><div class="text-xs text-gray-400 tracking-wider">TOURNAMENTS</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="absolute right-10 top-1/3 float hidden lg:block">
+      <div class="w-56 h-56 rounded-full bg-gradient-to-br from-neon/30 to-electric/10 blur-2xl"></div>
+    </div>
+  </section>
+
+  <!-- GAMES STRIP -->
+  <section class="py-8 border-y border-white/5 bg-panel/40">
+    <div class="max-w-7xl mx-auto px-6 flex flex-wrap items-center justify-center gap-6 md:gap-12 text-gray-400 font-display tracking-widest text-sm">
+      <span class="text-glow/60">SUPPORTED TITLES:</span>
+      <span class="hover:text-neon transition">🎮 EA SPORTS FC MOBILE</span>
+      <span class="hover:text-neon transition">🔫 BGMI</span>
+      <span class="hover:text-neon transition">🔥 FREE FIRE</span>
+      <span class="hover:text-neon transition">➕ MORE SOON</span>
+    </div>
+  </section>
+
+  <!-- FEATURED TOURNAMENTS -->
+  <section id="tournaments" class="py-20 px-6 relative">
+    <div class="max-w-7xl mx-auto">
+      <div class="text-center mb-12">
+        <h2 class="font-display font-black text-3xl sm:text-4xl mb-3">FEATURED <span class="text-neon">TOURNAMENTS</span></h2>
+        <p class="text-gray-400">Active & upcoming battles. Secure your slot before the deadline.</p>
+      </div>
+      <div id="tournamentGrid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+    </div>
+  </section>
+
+  <!-- WHY JOIN US -->
+  <section class="py-20 px-6 bg-panel/30 border-y border-white/5">
+    <div class="max-w-7xl mx-auto">
+      <div class="text-center mb-12">
+        <h2 class="font-display font-black text-3xl sm:text-4xl mb-3">WHY JOIN <span class="text-neon">US</span></h2>
+      </div>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="glass p-6 rounded-2xl card-hover text-center">
+          <div class="text-4xl mb-3">⚖️</div>
+          <h3 class="font-display font-bold text-lg mb-2 text-neon">Fair Play</h3>
+          <p class="text-sm text-gray-400">Strict anti-cheat monitoring & verified results on every match.</p>
+        </div>
+        <div class="glass p-6 rounded-2xl card-hover text-center">
+          <div class="text-4xl mb-3">⚡</div>
+          <h3 class="font-display font-bold text-lg mb-2 text-neon">Instant Updates</h3>
+          <p class="text-sm text-gray-400">Real-time match room IDs & brackets delivered to your dashboard.</p>
+        </div>
+        <div class="glass p-6 rounded-2xl card-hover text-center">
+          <div class="text-4xl mb-3">👨‍💼</div>
+          <h3 class="font-display font-bold text-lg mb-2 text-neon">Pro Admins</h3>
+          <p class="text-sm text-gray-400">Experienced organizers running smooth, on-time tournaments.</p>
+        </div>
+        <div class="glass p-6 rounded-2xl card-hover text-center">
+          <div class="text-4xl mb-3">💸</div>
+          <h3 class="font-display font-bold text-lg mb-2 text-neon">Verified Payouts</h3>
+          <p class="text-sm text-gray-400">Transparent & guaranteed prize payouts via UPI, every time.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMMUNITY -->
+  <section class="py-20 px-6">
+    <div class="max-w-5xl mx-auto glass glow-border rounded-3xl p-10 text-center relative overflow-hidden">
+      <div class="absolute -top-20 -right-20 w-60 h-60 rounded-full bg-electric/20 blur-3xl"></div>
+      <h2 class="font-display font-black text-3xl mb-3 relative">JOIN THE <span class="text-neon">COMMUNITY</span></h2>
+      <p class="text-gray-400 mb-8 relative">Get instant alerts, connect with players & never miss a tournament drop.</p>
+      <div class="flex flex-wrap gap-4 justify-center relative">
+        <a href="https://wa.me/919093707060" target="_blank" class="flex items-center gap-2 bg-[#25D366] text-black font-bold px-7 py-3 rounded-xl hover:scale-105 transition">💬 WhatsApp Group</a>
+        <a href="#" class="flex items-center gap-2 bg-[#5865F2] text-white font-bold px-7 py-3 rounded-xl hover:scale-105 transition">🎧 Discord Server</a>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ========== REGISTER VIEW ========== -->
+<div id="register" class="view">
+  <section class="pt-28 pb-20 px-6 min-h-screen grid-bg">
+    <div class="max-w-3xl mx-auto">
+      <h2 class="font-display font-black text-3xl sm:text-4xl text-center mb-2">TOURNAMENT <span class="text-neon">REGISTRATION</span></h2>
+      <p class="text-center text-gray-400 mb-10">Fill in your details, pay the entry fee & upload proof for approval.</p>
+
+      <div class="grid lg:grid-cols-5 gap-6">
+        <!-- Form -->
+        <div class="lg:col-span-3 glass rounded-2xl p-6 space-y-4">
+          <h3 class="font-display font-bold text-xl text-neon mb-2">Player Details</h3>
+          <div>
+            <label class="text-xs tracking-wider text-gray-400">SELECT TOURNAMENT</label>
+            <select id="regTournament" class="w-full mt-1 bg-darkbg border border-white/10 rounded-lg px-4 py-3 focus:border-neon outline-none"></select>
+          </div>
+          <div class="grid sm:grid-cols-2 gap-4">
+            <div>
+              <label class="text-xs tracking-wider text-gray-400">FULL NAME</label>
+              <input id="regName" class="w-full mt-1 bg-darkbg border border-white/10 rounded-lg px-4 py-3 focus:border-neon outline-none" placeholder="John Doe">
+            </div>
+            <div>
+              <label class="text-xs tracking-wider text-gray-400">IN-GAME NAME (IGN)</label>
+              <input id="regIGN" class="w-full mt-1 bg-darkbg border border-white/10 rounded-lg px-4 py-3 focus:border-neon outline-none" placeholder="H4CKER_X">
+            </div>
+            <div>
+              <label class="text-xs tracking-wider text-gray-400">GAME ID / UID</label>
+              <input id="regGameId" class="w-full mt-1 bg-darkbg border border-white/10 rounded-lg px-4 py-3 focus:border-neon outline-none" placeholder="5123XXXXXX">
+            </div>
+            <div>
+              <label class="text-xs tracking-wider text-gray-400">WHATSAPP NUMBER</label>
+              <input id="regPhone" class="w-full mt-1 bg-darkbg border border-white/10 rounded-lg px-4 py-3 focus:border-neon outline-none" placeholder="+91 9XXXXXXXXX">
+            </div>
+          </div>
+          <div>
+            <label class="text-xs tracking-wider text-gray-400">UPLOAD PAYMENT SCREENSHOT</label>
+            <div class="mt-1 border-2 border-dashed border-white/15 rounded-lg px-4 py-6 text-center hover:border-neon transition cursor-pointer" onclick="document.getElementById('regProof').click()">
+              <input id="regProof" type="file" accept="image/*" class="hidden" onchange="document.getElementById('proofName').textContent=this.files[0]?this.files[0].name:'No file selected'">
+              <div class="text-2xl mb-1">📤</div>
+              <div class="text-sm text-gray-400">Tap to upload QR payment proof</div>
+              <div id="proofName" class="text-xs text-neon mt-1">No file selected</div>
+            </div>
+          </div>
+          <button onclick="submitRegistration()" class="btn-neon w-full py-3.5 rounded-xl font-bold text-lg">✅ Submit Registration</button>
+          <p class="text-xs text-gray-500 text-center">You'll be redirected to WhatsApp after submitting.</p>
+        </div>
+
+        <!-- Payment -->
+        <div class="lg:col-span-2 space-y-6">
+          <div class="glass rounded-2xl p-6 text-center">
+            <h3 class="font-display font-bold text-lg text-neon mb-3">Scan & Pay Entry Fee</h3>
+            <div class="bg-white p-3 rounded-xl inline-block">
+              <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=upi://pay?pa=himalayanesports@upi%26pn=Himalayan%20eSports" alt="UPI QR" class="w-40 h-40">
+            </div>
+            <div class="mt-3 text-sm text-gray-300">UPI: <span class="text-neon font-semibold">himalayanesports@upi</span></div>
+            <div class="text-xs text-gray-500 mt-1">Pay the exact entry fee, screenshot & upload.</div>
+          </div>
+          <div class="glass rounded-2xl p-6">
+            <h3 class="font-display font-bold text-sm text-glow mb-3">📋 Steps</h3>
+            <ol class="text-sm text-gray-400 space-y-2 list-decimal list-inside">
+              <li>Select your tournament & fill details.</li>
+              <li>Scan QR & pay the entry fee.</li>
+              <li>Upload payment screenshot.</li>
+              <li>Wait for admin approval.</li>
+              <li>Match ID appears in <b class="text-neon">My Matches</b>.</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ========== DASHBOARD VIEW ========== -->
+<div id="dashboard" class="view">
+  <section class="pt-28 pb-20 px-6 min-h-screen">
+    <div class="max-w-5xl mx-auto">
+      <!-- login gate -->
+      <div id="loginGate" class="glass rounded-2xl p-10 max-w-md mx-auto text-center">
+        <div class="text-4xl mb-3">🔐</div>
+        <h2 class="font-display font-bold text-2xl mb-2">Player Login</h2>
+        <p class="text-gray-400 text-sm mb-6">Login to access your matches, room IDs & passwords.</p>
+        <input id="loginIGN" class="w-full bg-darkbg border border-white/10 rounded-lg px-4 py-3 mb-3 focus:border-neon outline-none" placeholder="Enter your IGN">
+        <button onclick="playerLogin()" class="btn-neon w-full py-3 rounded-xl font-bold mb-3">Login</button>
+        <div class="flex items-center gap-3 my-3 text-xs text-gray-500"><div class="flex-1 h-px bg-white/10"></div>OR<div class="flex-1 h-px bg-white/10"></div></div>
+        <button onclick="playerLogin()" class="w-full py-3 rounded-xl font-bold bg-white text-gray-800 flex items-center justify-center gap-2 hover:bg-gray-100">
+          <span>🔵</span> Continue with Google
+        </button>
+        <p class="text-xs text-gray-500 mt-4">Demo: try IGN <b class="text-neon">H4CKER_X</b> or register first.</p>
+      </div>
+
+      <!-- dashboard content -->
+      <div id="dashContent" class="hidden">
+        <div class="glass rounded-2xl p-6 mb-6 flex flex-wrap items-center justify-between gap-4">
+          <div class="flex items-center gap-4">
+            <div class="w-16 h-16 rounded-xl btn-neon flex items-center justify-center font-display font-black text-2xl" id="avatarInit">H</div>
+            <div>
+              <div class="font-display font-bold text-xl" id="profName">Player</div>
+              <div class="text-sm text-gray-400">IGN: <span class="text-neon" id="profIGN"></span> • ID: <span id="profGameId"></span></div>
+              <div class="text-sm text-gray-400">📱 <span id="profPhone"></span></div>
+            </div>
+          </div>
+          <button onclick="playerLogout()" class="glass px-5 py-2 rounded-lg text-sm hover:text-neon transition border border-white/10">Logout</button>
+        </div>
+
+        <h2 class="font-display font-bold text-2xl mb-4">🎯 My <span class="text-neon">Matches</span></h2>
+        <div id="myMatches" class="space-y-4"></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ========== ADMIN VIEW ========== -->
+<div id="admin" class="view">
+  <section class="pt-28 pb-20 px-6 min-h-screen">
+    <div class="max-w-6xl mx-auto">
+      <div class="flex items-center gap-3 mb-6">
+        <h2 class="font-display font-black text-3xl">ADMIN <span class="text-electric">CONTROL PANEL</span></h2>
+        <span class="glass px-3 py-1 rounded-full text-xs text-neon">Organizer Backend</span>
+      </div>
+
+      <!-- tabs -->
+      <div class="flex flex-wrap gap-2 mb-6">
+        <button onclick="adminTab('approvals',event)" class="adm-tab tab-active px-5 py-2 rounded-lg font-bold text-sm glass">Player Approvals</button>
+        <button onclick="adminTab('publish',event)" class="adm-tab px-5 py-2 rounded-lg font-bold text-sm glass">Publish Match ID</button>
+        <button onclick="adminTab('create',event)" class="adm-tab px-5 py-2 rounded-lg font-bold text-sm glass">Create Tournament</button>
+      </div>
+
+      <!-- Approvals -->
+      <div id="tab-approvals" class="adm-panel">
+        <div class="glass rounded-2xl p-6">
+          <h3 class="font-display font-bold text-lg text-neon mb-4">Pending Registrations & Payment Review</h3>
+          <div id="approvalList" class="space-y-3"></div>
+        </div>
+      </div>
+
+      <!-- Publish -->
+      <div id="tab-publish" class="adm-panel hidden">
+        <div class="glass rounded-2xl p-6">
+          <h3 class="font-display font-bold text-lg text-neon mb-4">Publish Room ID & Password</h3>
+          <p class="text-sm text-gray-400 mb-5">Entered details instantly reflect only on approved players' dashboards.</p>
+          <div class="grid sm:grid-cols-2 gap-4 mb-4">
+            <div>
+              <label class="text-xs tracking-wider text-gray-400">SELECT TOURNAMENT</label>
+              <select id="pubTournament" class="w-full mt-1 bg-darkbg border border-white/10 rounded-lg px-4 py-3 focus:border-neon outline-none"></select>
+            </div>
+            <div>
+              <label class="text-xs tracking-wider text-gray-400">MATCH TIME</label>
+              <input id="pubTime" class="w-full mt-1 bg-darkbg border border-white/10 rounded-lg px-4 py-3 focus:border-neon outline-none" placeholder="Today 8:00 PM">
+            </div>
+            <div>
+              <label class="text-xs tracking-wider text-gray-400">GROUP / BRACKET</label>
+              <input id="pubGroup" class="w-full mt-1 bg-darkbg border border-white/10 rounded-lg px-4 py-3 focus:border-neon outline-none" placeholder="Group A">
+            </div>
+            <div>
+              <label class="text-xs tracking-wider text-gray-400">ROOM ID</label>
+              <input id="pubRoomId" class="w-full mt-1 bg-darkbg border border-white/10 rounded-lg px-4 py-3 focus:border-neon outline-none" placeholder="1234567">
+            </div>
+            <div class="sm:col-span-2">
+              <label class="text-xs tracking-wider text-gray-400">ROOM PASSWORD</label>
+              <input id="pubRoomPass" class="w-full mt-1 bg-darkbg border border-white/10 rounded-lg px-4 py-3 focus:border-neon outline-none" placeholder="himalayan123">
+            </div>
+          </div>
+          <button onclick="publishRoom()" class="btn-neon px-8 py-3 rounded-xl font-bold">📡 Publish to Approved Players</button>
+          <div id="pubMsg" class="text-sm text-neon mt-3"></div>
+        </div>
+      </div>
+
+      <!-- Create -->
+      <div id="tab-create" class="adm-panel hidden">
+        <div class="glass rounded-2xl p-6">
+          <h3 class="font-display font-bold text-lg text-neon mb-4">Create New Tournament</h3>
+          <div class="grid sm:grid-cols-2 gap-4 mb-4">
+            <div><label class="text-xs text-gray-400 tracking-wider">TOURNAMENT NAME</label><input id="ctName" class="w-full mt-1 bg-darkbg border border-white/10 rounded-lg px-4 py-3 focus:border-neon outline-none" placeholder="BGMI Winter Clash"></div>
+            <div><label class="text-xs text-gray-400 tracking-wider">GAME</label>
+              <select id="ctGame" class="w-full mt-1 bg-darkbg border border-white/10 rounded-lg px-4 py-3 focus:border-neon outline-none">
+                <option>BGMI</option><option>Free Fire</option><option>EA Sports FC Mobile</option>
+              </select></div>
+            <div><label class="text-xs text-gray-400 tracking-wider">PRIZE POOL (₹)</label><input id="ctPrize" class="w-full mt-1 bg-darkbg border border-white/10 rounded-lg px-4 py-3 focus:border-neon outline-none" placeholder="10000"></div>
+            <div><label class="text-xs text-gray-400 tracking-wider">ENTRY FEE (₹)</label><input id="ctFee" class="w-full mt-1 bg-darkbg border border-white/10 rounded-lg px-4 py-3 focus:border-neon outline-none" placeholder="50"></div>
+            <div><label class="text-xs text-gray-400 tracking-wider">DEADLINE</label><input id="ctDeadline" class="w-full mt-1 bg-darkbg border border-white/10 rounded-lg px-4 py-3 focus:border-neon outline-none" placeholder="25 Dec, 6 PM"></div>
+            <div><label class="text-xs text-gray-400 tracking-wider">STATUS</label>
+              <select id="ctStatus" class="w-full mt-1 bg-darkbg border border-white/10 rounded-lg px-4 py-3 focus:border-neon outline-none">
+                <option>Upcoming</option><option>Live</option><option>Free Entry</option>
+              </select></div>
+          </div>
+          <button onclick="createTournament()" class="btn-neon px-8 py-3 rounded-xl font-bold">➕ Create Tournament</button>
+          <div id="ctMsg" class="text-sm text-neon mt-3"></div>
+        </div>
+      </div>
+
+      <!-- Google Sheet schema -->
+      <div class="glass rounded-2xl p-6 mt-8">
+        <h3 class="font-display font-bold text-lg text-glow mb-3">🗄️ Google Sheets Backend Schema</h3>
+        <div class="grid md:grid-cols-3 gap-4 text-xs">
+          <div class="bg-darkbg rounded-lg p-4 border border-white/5">
+            <div class="text-neon font-bold mb-2">Sheet: Players</div>
+            <code class="text-gray-400 leading-6">PlayerID · Name · IGN · GameID · WhatsApp · Email · RegDate</code>
+          </div>
+          <div class="bg-darkbg rounded-lg p-4 border border-white/5">
+            <div class="text-neon font-bold mb-2">Sheet: Registrations</div>
+            <code class="text-gray-400 leading-6">RegID · PlayerID · TournamentID · PaymentProofURL · Status(Pending/Approved/Rejected) · Timestamp</code>
+          </div>
+          <div class="bg-darkbg rounded-lg p-4 border border-white/5">
+            <div class="text-neon font-bold mb-2">Sheet: Tournaments</div>
+            <code class="text-gray-400 leading-6">TournamentID · Name · Game · PrizePool · EntryFee · Deadline · Status · RoomID · RoomPass · MatchTime · Group</code>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- FOOTER -->
+<footer class="bg-panel/60 border-t border-white/5 py-12 px-6 relative">
+  <div class="max-w-7xl mx-auto grid md:grid-cols-4 gap-8">
+    <div>
+      <div class="flex items-center gap-2 mb-3">
+        <div class="w-9 h-9 rounded-lg btn-neon flex items-center justify-center font-display font-black">H</div>
+        <span class="font-display font-bold">HIMALAYAN <span class="text-neon">eSports</span></span>
+      </div>
+      <p class="text-sm text-gray-400">Rise to Glory. Pan-India esports tournaments with fair play & verified payouts.</p>
+    </div>
+    <div>
+      <h4 class="font-display font-bold text-sm mb-3 text-glow">QUICK LINKS</h4>
+      <ul class="text-sm text-gray-400 space-y-2">
+        <li><a onclick="showView('home')" class="cursor-pointer hover:text-neon">Home</a></li>
+        <li><a onclick="showView('register')" class="cursor-pointer hover:text-neon">Register</a></li>
+        <li><a onclick="showView('dashboard')" class="cursor-pointer hover:text-neon">My Matches</a></li>
+        <li><a onclick="showView('admin')" class="cursor-pointer hover:text-neon">Admin</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4 class="font-display font-bold text-sm mb-3 text-glow">CONTACT</h4>
+      <ul class="text-sm text-gray-400 space-y-2">
+        <li>📧 nischalnick@gmail.com</li>
+        <li>📱 +91 9093707060</li>
+        <li>📍 Garidhura, Darjeeling, WB</li>
+      </ul>
+    </div>
+    <div>
+      <h4 class="font-display font-bold text-sm mb-3 text-glow">JOIN US</h4>
+      <div class="flex gap-3">
+        <a href="https://wa.me/919093707060" target="_blank" class="w-10 h-10 rounded-lg glass flex items-center justify-center hover:text-neon transition">💬</a>
+        <a href="#" class="w-10 h-10 rounded-lg glass flex items-center justify-center hover:text-neon transition">🎧</a>
+        <a href="#" class="w-10 h-10 rounded-lg glass flex items-center justify-center hover:text-neon transition">📷</a>
+      </div>
+    </div>
+  </div>
+  <div class="max-w-7xl mx-auto mt-8 pt-6 border-t border-white/5 text-center text-xs text-gray-500">
+    © 2024 Himalayan eSports. All rights reserved. • Built for champions 🏔️
+  </div>
+</footer>
+
+<!-- Toast -->
+<div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 btn-neon px-6 py-3 rounded-xl font-bold shadow-lg z-[100] opacity-0 translate-y-10 transition-all duration-300"></div>
+
+<script>
+// ---------- DATA (demo, localStorage-backed) ----------
+let tournaments = JSON.parse(localStorage.getItem('h_tourneys')) || [
+  {id:'T1', name:'BGMI Winter Clash', game:'BGMI', prize:'10,000', fee:'50', deadline:'25 Dec, 6 PM', status:'Live', roomId:'', roomPass:'', matchTime:'', group:''},
+  {id:'T2', name:'Free Fire Blaze Cup', game:'Free Fire', prize:'7,500', fee:'30', deadline:'28 Dec, 8 PM', status:'Upcoming', roomId:'', roomPass:'', matchTime:'', group:''},
+  {id:'T3', name:'FC Mobile Pro League', game:'EA Sports FC Mobile', prize:'5,000', fee:'Free', deadline:'30 Dec, 5 PM', status:'Free Entry', roomId:'', roomPass:'', matchTime:'', group:''},
+];
+let registrations = JSON.parse(localStorage.getItem('h_regs')) || [
+  {id:'R1', name:'Demo Hacker', ign:'H4CKER_X', gameId:'5123456789', phone:'+91 9000000000', tournamentId:'T1', status:'Approved'},
+];
+let currentPlayer = null;
+
+function save(){ localStorage.setItem('h_tourneys',JSON.stringify(tournaments)); localStorage.setItem('h_regs',JSON.stringify(registrations)); }
+
+const gameIcon = g => g==='BGMI'?'🔫':g==='Free Fire'?'🔥':g.includes('FC')?'⚽':'🎮';
+const statusColor = s => s==='Live'?'bg-red-500':s==='Free Entry'?'bg-green-500':'bg-electric';
+
+// ---------- VIEW NAV ----------
+function showView(id){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(id==='register') populateRegSelect();
+  if(id==='admin'){ renderApprovals(); populatePubSelect(); }
+  if(id==='dashboard' && currentPlayer) renderDashboard();
+}
+function toggleMenu(){ document.getElementById('mobileMenu').classList.toggle('hidden'); document.getElementById('mobileMenu').classList.toggle('flex'); }
+
+function toast(msg){
+  const t=document.getElementById('toast'); t.textContent=msg;
+  t.classList.remove('opacity-0','translate-y-10');
+  setTimeout(()=>t.classList.add('opacity-0','translate-y-10'),2600);
+}
+
+// ---------- RENDER TOURNAMENTS ----------
+function renderTournaments(){
+  const grid=document.getElementById('tournamentGrid');
+  grid.innerHTML=tournaments.map(t=>`
+    <div class="glass rounded-2xl overflow-hidden card-hover border border-white/10">
+      <div class="h-28 bg-gradient-to-br from-electric/30 to-neon/10 relative flex items-center justify-center">
+        <span class="text-5xl">${gameIcon(t.game)}</span>
+        <span class="absolute top-3 right-3 ${statusColor(t.status)} text-xs font-bold px-3 py-1 rounded-full text-white">${t.status}</span>
+      </div>
+      <div class="p-5">
+        <div class="text-xs text-glow/70 tracking-widest mb-1">${t.game}</div>
+        <h3 class="font-display font-bold text-lg mb-3">${t.name}</h3>
+        <div class="grid grid-cols-2 gap-3 text-sm mb-4">
+          <div><div class="text-gray-500 text-xs">PRIZE POOL</div><div class="text-neon font-bold">₹${t.prize}</div></div>
+          <div><div class="text-gray-500 text-xs">ENTRY FEE</div><div class="font-bold">${t.fee==='Free'?'FREE':'₹'+t.fee}</div></div>
+          <div class="col-span-2"><div class="text-gray-500 text-xs">DEADLINE</div><div class="font-semibold text-sm">⏰ ${t.deadline}</div></div>
+        </div>
+        <button onclick="showView('register');setTimeout(()=>{document.getElementById('regTournament').value='${t.id}'},50)" class="btn-neon w-full py-2.5 rounded-lg font-bold text-sm">Register</button>
+      </div>
+    </div>`).join('');
+}
+
+// ---------- REGISTER ----------
+function populateRegSelect(){
+  const sel=document.getElementById('regTournament');
+  sel.innerHTML=tournaments.map(t=>`<option value="${t.id}">${t.name} (${t.fee==='Free'?'Free':'₹'+t.fee})</option>`).join('');
+}
+function submitRegistration(){
+  const name=document.getElementById('regName').value.trim();
+  const ign=document.getElementById('regIGN').value.trim();
+  const gameId=document.getElementById('regGameId').value.trim();
+  const phone=document.getElementById('regPhone').value.trim();
+  const tId=document.getElementById('regTournament').value;
+  if(!name||!ign||!gameId||!phone){ toast('⚠️ Please fill all fields'); return; }
+  const reg={id:'R'+Date.now(), name, ign, gameId, phone, tournamentId:tId, status:'Pending'};
+  registrations.push(reg); save();
+  toast('✅ Registered! Pending admin approval');
+  document.getElementById('regName').value='';document.getElementById('regIGN').value='';document.getElementById('regGameId').value='';document.getElementById('regPhone').value='';
+  document.getElementById('proofName').textContent='No file selected';
+  setTimeout(()=>{ if(confirm('Registration submitted! Redirect to WhatsApp for confirmation?')) window.open('https://wa.me/919093707060?text=Hi, I registered for a tournament. IGN: '+ign,'_blank'); },400);
+}
+
+// ---------- PLAYER LOGIN / DASHBOARD ----------
+function playerLogin(){
+  const ign=document.getElementById('loginIGN').value.trim();
+  const found=registrations.find(r=>r.ign.toLowerCase()===ign.toLowerCase());
+  if(!found){ toast('⚠️ No registration found for this IGN'); return; }
+  currentPlayer=found;
+  document.getElementById('loginGate').classList.add('hidden');
+  document.getElementById('dashContent').classList.remove('hidden');
+  renderDashboard();
+}
+function playerLogout(){
+  currentPlayer=null;
+  document.getElementById('loginGate').classList.remove('hidden');
+  document.getElementById('dashContent').classList.add('hidden');
+  document.getElementById('loginIGN').value='';
+}
+function renderDashboard(){
+  const p=currentPlayer;
+  document.getElementById('profName').textContent=p.name;
+  document.getElementById('profIGN').textContent=p.ign;
+  document.getElementById('profGameId').textContent=p.gameId;
+  document.getElementById('profPhone').textContent=p.phone;
+  document.getElementById('avatarInit').textContent=p.name.charAt(0).toUpperCase();
+
+  const myRegs=registrations.filter(r=>r.ign.toLowerCase()===p.ign.toLowerCase());
+  const box=document.getElementById('myMatches');
+  if(!myRegs.length){ box.innerHTML='<div class="glass rounded-2xl p-8 text-center text-gray-400">No matches registered yet.</div>'; return; }
+  box.innerHTML=myRegs.map(r=>{
+    const t=tournaments.find(x=>x.id===r.tournamentId)||{};
+    const approved=r.status==='Approved';
+    const hasRoom=approved && t.roomId;
+    return `
+    <div class="glass rounded-2xl p-5 border border-white/10">
+      <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+        <div class="flex items-center gap-3">
+          <span class="text-3xl">${gameIcon(t.game)}</span>
+          <div>
+            <div class="font-display font-bold text-lg">${t.name||'Tournament'}</div>
+            <div class="text-xs text-gray-400">${t.game||''}</div>
+          </div>
+        </div>
+        <span class="text-xs font-bold px-3 py-1 rounded-full ${approved?'bg-green-500 text-white':r.status==='Rejected'?'bg-red-500 text-white':'bg-yellow-500 text-black'}">${r.status}</span>
+      </div>
+      <div class="grid sm:grid-cols-3 gap-3 text-sm">
+        <div class="bg-darkbg rounded-lg p-3"><div class="text-gray-500 text-xs">MATCH TIME</div><div class="font-bold">${t.matchTime||'TBA'}</div></div>
+        <div class="bg-darkbg rounded-lg p-3"><div class="text-gray-500 text-xs">GROUP/BRACKET</div><div class="font-bold">${t.group||'TBA'}</div></div>
+        <div class="bg-darkbg rounded-lg p-3"><div class="text-gray-500 text-xs">PRIZE POOL</div><div class="font-bold text-neon">₹${t.prize||'-'}</div></div>
+      </div>
+      <div class="mt-3 rounded-lg p-4 ${hasRoom?'glow-border bg-neon/5':'bg-darkbg/60 border border-white/5'}">
+        ${hasRoom ? `
+          <div class="text-xs text-neon tracking-widest mb-2">🔓 ROOM CREDENTIALS (APPROVED)</div>
+          <div class="flex flex-wrap gap-6">
+            <div><div class="text-gray-500 text-xs">ROOM ID</div><div class="font-display font-bold text-xl text-neon">${t.roomId}</div></div>
+            <div><div class="text-gray-500 text-xs">PASSWORD</div><div class="font-display font-bold text-xl text-glow">${t.roomPass}</div></div>
+          </div>` : `
+          <div class="flex items-center gap-2 text-sm text-gray-400">
+            🔒 ${approved?'Room ID & Password will appear here before match time.':'Room details locked until your registration is approved.'}
+          </div>`}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ---------- ADMIN ----------
+function adminTab(name,e){
+  document.querySelectorAll('.adm-panel').forEach(p=>p.classList.add('hidden'));
+  document.getElementById('tab-'+name).classList.remove('hidden');
+  document.querySelectorAll('.adm-tab').forEach(b=>b.classList.remove('tab-active'));
+  e.target.classList.add('tab-active');
+}
+function renderApprovals(){
+  const box=document.getElementById('approvalList');
+  if(!registrations.length){ box.innerHTML='<div class="text-gray-400 text-sm">No registrations.</div>'; return; }
+  box.innerHTML=registrations.map(r=>{
+    const t=tournaments.find(x=>x.id===r.tournamentId)||{};
+    return `
+    <div class="bg-darkbg rounded-xl p-4 flex flex-wrap items-center justify-between gap-3 border border-white/5">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-lg btn-neon flex items-center justify-center font-bold">${r.name.charAt(0)}</div>
+        <div>
+          <div class="font-bold">${r.name} <span class="text-neon text-sm">(${r.ign})</span></div>
+          <div class="text-xs text-gray-400">${t.name||''} • ID: ${r.gameId} • ${r.phone}</div>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="text-xs font-bold px-3 py-1 rounded-full ${r.status==='Approved'?'bg-green-500 text-white':r.status==='Rejected'?'bg-red-500 text-white':'bg-yellow-500 text-black'}">${r.status}</span>
+        <button onclick="setStatus('${r.id}','Approved')" class="bg-green-500/20 text-green-400 px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-green-500 hover:text-white transition">Approve</button>
+        <button onclick="setStatus('${r.id}','Rejected')" class="bg-red-500/20 text-red-400 px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-red-500 hover:text-white transition">Reject</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+function setStatus(id,status){
+  const r=registrations.find(x=>x.id===id); if(r){ r.status=status; save(); renderApprovals(); toast(`Player ${status}`); if(currentPlayer) renderDashboard(); }
+}
+function populatePubSelect(){
+  document.getElementById('pubTournament').innerHTML=tournaments.map(t=>`<option value="${t.id}">${t.name}</option>`).join('');
+}
+function publishRoom(){
+  const id=document.getElementById('pubTournament').value;
+  const t=tournaments.find(x=>x.id===id);
+  t.roomId=document.getElementById('pubRoomId').value.trim();
+  t.roomPass=document.getElementById('pubRoomPass').value.trim();
+  t.matchTime=document.getElementById('pubTime').value.trim();
+  t.group=document.getElementById('pubGroup').value.trim();
+  save();
+  document.getElementById('pubMsg').textContent='✅ Published! Now visible on approved players\' dashboards.';
+  toast('📡 Room details published');
+  if(currentPlayer) renderDashboard();
+}
+function createTournament(){
+  const name=document.getElementById('ctName').value.trim();
+  if(!name){ document.getElementById('ctMsg').textContent='⚠️ Enter a name'; return; }
+  tournaments.push({
+    id:'T'+Date.now(), name, game:document.getElementById('ctGame').value,
+    prize:document.getElementById('ctPrize').value||'0', fee:document.getElementById('ctFee').value||'Free',
+    deadline:document.getElementById('ctDeadline').value||'TBA', status:document.getElementById('ctStatus').value,
+    roomId:'', roomPass:'', matchTime:'', group:''
+  });
+  save(); renderTournaments(); populatePubSelect(); populateRegSelect();
+  document.getElementById('ctMsg').textContent='✅ Tournament created!';
+  document.getElementById('ctName').value='';
+  toast('➕ Tournament created');
+}
+
+// ---------- INIT ----------
+renderTournaments();
+populateRegSelect();
+</script>
+</body>
+</html>
